@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dafcc614bb94d95bc1c428613026eb4, type: 3}
+  m_Name: Unit-Aliance-Archer
+  m_EditorClassIdentifier: 
+  _entityDescriptionData:
+    Name: "\u041B\u0443\u0447\u043D\u0438\u043A"
+    Prefab: {fileID: 3557740067385222072, guid: b39997e909fda654e842bc50aa69d44e, type: 3}
+    CreationTime: 2
+  _entityComponentsData:
+    Components:
+    - rid: 1731336474769227830
+    - rid: 1731336474769227831
+    - rid: 1731336467620298828
+    - rid: 1731336467620298826
+    - rid: 1731336474769227833
+    - rid: 1731336491065671734
+    - rid: 1731336467620298827
+    - rid: 1731336474769227834
+    - rid: 1731336540897411074
+    - rid: 1731336540897411072
+    - rid: 1731336491065671736
+    - rid: 1731336536560500830
+    - rid: 1731336625279729720
+    - rid: 1731336628714602561
+  references:
+    version: 2
+    RefIds:
+    - rid: 1731336467620298826
+      type: {class: PositionComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        Pos: {x: 0, y: 0, z: 0}
+    - rid: 1731336467620298827
+      type: {class: TransformComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        Transform: {fileID: 0}
+    - rid: 1731336467620298828
+      type: {class: TagTeamComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        TagTeam: 0
+    - rid: 1731336474769227830
+      type: {class: HeroClassComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        HeroClass: 1
+    - rid: 1731336474769227831
+      type: {class: HealthComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        HealthCurrent: 42
+        HealthMax: 42
+        HealthPerTick: 2
+        Timer:
+          Remain: 0
+          Delayed: 1
+    - rid: 1731336474769227833
+      type: {class: MovementComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        Rigidbody: {fileID: 0}
+        Transform: {fileID: 0}
+        Direct: {x: 0, y: 0, z: 0}
+        Speed: 40
+    - rid: 1731336474769227834
+      type: {class: NearEntitiesComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        Radius: 10
+        Allies: []
+        Enemies: []
+    - rid: 1731336491065671734
+      type: {class: RotationComponent, ns: , asm: Assembly-CSharp}
+      data:
+        DirectToLook: {x: 0, y: 0, z: 0}
+        SpeedRotation: 0.75
+    - rid: 1731336491065671736
+      type: {class: AnimationComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        Animator: {fileID: 0}
+    - rid: 1731336536560500830
+      type: {class: TargetComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        Target:
+          isDirty: 0
+          isDisposed: 0
+          previousArchetype: 0
+          currentArchetype: 0
+          previousArchetypeLength: 0
+          currentArchetypeLength: 0
+    - rid: 1731336540897411072
+      type: {class: QuiverComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        ProjectileData:
+          Damage: 7
+          StartPosition: {x: 0, y: 0, z: 0}
+          Direct: {x: 0, y: 0, z: 0}
+          Speed: 60
+          Prefab: {fileID: 1373784572623432716, guid: 58ed73a19a24c8e43a9c16b2da5344dc, type: 3}
+    - rid: 1731336540897411074
+      type: {class: RangeAttackComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        StartDistanceAttack: 7
+        DistanceAttack: 10
+        AttackTime: 1
+    - rid: 1731336625279729720
+      type: {class: HealthBarComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        ProgressBar: {fileID: 0}
+        VisualOffset: {x: 0, y: 2, z: 0}
+    - rid: 1731336628714602561
+      type: {class: DeactivateColliderOnDeadComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        Rigidbody: {fileID: 0}
+        Collider: {fileID: 0}

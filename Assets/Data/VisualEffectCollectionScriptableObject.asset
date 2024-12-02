@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62f46ed3bac442a392beb6c1eaca0643, type: 3}
+  m_Name: VisualEffectCollectionScriptableObject
+  m_EditorClassIdentifier: 
+  List:
+  - Prefab: {fileID: 176804, guid: 044619509a2f4ec4aa502371cec3d8e0, type: 3}
+    LiveTime: 1
+    AttackType: 1
+  - Prefab: {fileID: 167524, guid: 0f3a103a1a5057444af2afa940ac61a7, type: 3}
+    LiveTime: 1
+    AttackType: 0

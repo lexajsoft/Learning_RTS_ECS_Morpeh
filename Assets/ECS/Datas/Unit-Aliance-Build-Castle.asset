@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dafcc614bb94d95bc1c428613026eb4, type: 3}
+  m_Name: Unit-Aliance-Build-Castle
+  m_EditorClassIdentifier: 
+  _entityDescriptionData:
+    Name: 
+    Prefab: {fileID: 1232926118088455369, guid: f04a0cc5277f60640b04627bc7c45a6c, type: 3}
+    CreationTime: 0
+  _entityComponentsData:
+    Components:
+    - rid: 1731336628714602562
+    - rid: 1731336474769227831
+    - rid: 1731336467620298828
+    - rid: 1731336467620298826
+    - rid: 1731336467620298827
+    - rid: 1731336540897411130
+    - rid: 1731336540897411146
+    - rid: 1731336540897411147
+    - rid: 1731336540897411148
+    - rid: 1731336540897411149
+    - rid: 1731336540897411150
+    - rid: 1731336625279729727
+  references:
+    version: 2
+    RefIds:
+    - rid: 1731336467620298826
+      type: {class: PositionComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        Pos: {x: 0, y: 0, z: 0}
+    - rid: 1731336467620298827
+      type: {class: TransformComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        Transform: {fileID: 0}
+    - rid: 1731336467620298828
+      type: {class: TagTeamComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        TagTeam: 0
+    - rid: 1731336474769227831
+      type: {class: HealthComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        HealthCurrent: 1000
+        HealthMax: 1000
+        HealthPerTick: 4
+        Timer:
+          Remain: 0
+          Delayed: 1
+    - rid: 1731336540897411130
+      type: {class: SpawnComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        UnitQuickSpawnCount: 10
+        PoolEntitys:
+        - {fileID: 11400000, guid: b382dd16ccf638a459f581c8db4a1519, type: 2}
+        - {fileID: 11400000, guid: 3dce9a8f8d8ed6c4d86ad99072aca6ca, type: 2}
+        - {fileID: 11400000, guid: 67061f9df2b271847a6c983ac6c2120a, type: 2}
+        QueueEntity: []
+    - rid: 1731336540897411146
+      type: {class: RangeAttackComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        StartDistanceAttack: 5
+        DistanceAttack: 5
+        AttackTime: 1
+    - rid: 1731336540897411147
+      type: {class: QuiverComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        ProjectileData:
+          Damage: 20
+          StartPosition: {x: 0, y: 0, z: 0}
+          Direct: {x: 0, y: 0, z: 0}
+          Speed: 70
+          Prefab: {fileID: 1373784572623432716, guid: 58ed73a19a24c8e43a9c16b2da5344dc, type: 3}
+    - rid: 1731336540897411148
+      type: {class: NearEntitiesComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        Radius: 0
+        Allies: []
+        Enemies: []
+    - rid: 1731336540897411149
+      type: {class: FindNearTargetEntityRequestComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        Entity:
+          isDirty: 0
+          isDisposed: 0
+          previousArchetype: 0
+          currentArchetype: 0
+          previousArchetypeLength: 0
+          currentArchetypeLength: 0
+        FindTargetType: 0
+    - rid: 1731336540897411150
+      type: {class: TargetComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        Target:
+          isDirty: 0
+          isDisposed: 0
+          previousArchetype: 0
+          currentArchetype: 0
+          previousArchetypeLength: 0
+          currentArchetypeLength: 0
+    - rid: 1731336625279729727
+      type: {class: HealthBarComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        ProgressBar: {fileID: 0}
+        VisualOffset: {x: 0, y: 10, z: 0}
+    - rid: 1731336628714602562
+      type: {class: HeroClassComponent, ns: ECS.Components, asm: Assembly-CSharp}
+      data:
+        HeroClass: 1
