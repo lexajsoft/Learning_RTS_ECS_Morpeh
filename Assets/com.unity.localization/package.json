@@ -1,0 +1,9 @@
+{
+  "name": "com.unity.localization",
+  "displayName": "Localization (Stub for TriInspector)",
+  "version": "1.0.0",
+  "unity": "2020.3",
+  "description": "Localization package stub for TriInspector",
+  "dependencies": {},
+  "_fingerprint": "184244fa1721e8e5da6aff2aca29b92f0a1e5ec7"
+}

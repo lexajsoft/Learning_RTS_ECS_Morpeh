@@ -126,6 +126,7 @@ namespace ECS.Systems
                     entitySpawnReadyComponent.entityDescriptionScriptableObject.GetEntityComponentsData(),
                     null, tagTeamComponent.TagTeam, position, rotation);
             
+                Debug.Log($"[{tagTeamComponent.TagTeam.ToString()}] Юнит построен:" + entitySpawnReadyComponent.entityDescriptionScriptableObject.GetEntityDescriptionData().Name);
                 entity.RemoveComponent<EntitySpawnReadyComponent>();
             }
         }
