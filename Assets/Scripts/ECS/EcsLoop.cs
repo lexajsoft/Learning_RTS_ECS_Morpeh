@@ -114,16 +114,16 @@ namespace ECS
             //WorldManager.WorldEvent.Commit();
         }
 
-        private void FixedUpdate()
-        {
-            if(_isWork == false)
-                return;
-            
-            _worldDefaultSystemGroup.Update(Time.fixedDeltaTime);
-            _worldEventSystemGroup.Update(Time.fixedDeltaTime);
-            // WorldManager.WorldDefault.Update(Time.fixedDeltaTime);
-            // WorldManager.WorldEvent.Update(Time.fixedDeltaTime);
-        }
+        // private void FixedUpdate()
+        // {
+        //     if(_isWork == false)
+        //         return;
+        //     
+        //     _worldDefaultSystemGroup.Update(Time.fixedDeltaTime);
+        //     _worldEventSystemGroup.Update(Time.fixedDeltaTime);
+        //     // WorldManager.WorldDefault.Update(Time.fixedDeltaTime);
+        //     // WorldManager.WorldEvent.Update(Time.fixedDeltaTime);
+        // }
 
 
         public void GameOver()
