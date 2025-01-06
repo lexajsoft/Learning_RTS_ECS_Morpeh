@@ -15,75 +15,64 @@ namespace ECS.Systems
     public class GameOverSystem : UpdateSystem
     {
         private Filter _filter;
+        private Array _tags;
+        private Dictionary<TagTeam, int> _countUnits;
+
         public override void OnAwake()
         {
             _filter = World.Filter
                 .With<HealthComponent>()
                 .With<TagTeamComponent>()
                 .Build();
-            _countUnits = new Dictionary<TagTeam, int>();
-            _countUnits[TagTeam.Red] = 0;
-            _countUnits[TagTeam.Blue] = 0;
-            _countUnits[TagTeam.Green] = 0;
-            _countUnits[TagTeam.Purple] = 0;
-            
-        }
 
-        private Dictionary<TagTeam, int> _countUnits;
+            // Инициализация тэгов
+            _tags = Enum.GetValues(typeof(TagTeam));
+            _countUnits = new Dictionary<TagTeam, int>();
+            // обнуление количества юнитов
+            foreach (TagTeam tag in _tags)
+            {
+                _countUnits[tag] = 0;
+            }
+        }
 
         public override void OnUpdate(float deltaTime)
         {
-            for (int i = 0; i < Enum.GetValues(typeof(TagTeam)).Length; i++)
+            for (int i = 0; i < _tags.Length; i++)
             {
-                _countUnits[(TagTeam)i] = 0;
+                _countUnits[(TagTeam) i] = 0;
             }
-            
+
             foreach (var entity in _filter)
             {
-                ref var healthComponent = ref entity.GetComponent<HealthComponent>();
                 ref var tagComponent = ref entity.GetComponent<TagTeamComponent>();
+                //ref var healthComponent = ref entity.GetComponent<HealthComponent>();
                 //if (healthComponent.IsLive)
                 {
                     _countUnits[tagComponent.TagTeam]++;
                 }
             }
 
+            // подсчет живых игроков
             int countLivePlayers = 0;
-            for (int i = 0; i < Enum.GetValues(typeof(TagTeam)).Length; i++)
+            foreach (TagTeam tag in _tags)
             {
-                if (_countUnits[(TagTeam)i] > 0)
+                if (_countUnits[tag] > 0)
                 {
                     countLivePlayers++;
-                }    
+                }
             }
-            // if (_countUnits[TagTeam.Red] > 0)
-            // {
-            //     countLivePlayers++;
-            // }
-            // if (_countUnits[TagTeam.Blue] > 0)
-            // {
-            //     countLivePlayers++;
-            // }
-            // if (_countUnits[TagTeam.Green] > 0)
-            // {
-            //     countLivePlayers++;
-            // }
-            // if (_countUnits[TagTeam.Purple] > 0)
-            // {
-            //     countLivePlayers++;
-            // }
 
             if (countLivePlayers <= 1)
             {
                 EcsLoop.Instance.GameOver();
-                
-                for (int i = 0; i < Enum.GetValues(typeof(TagTeam)).Length; i++)
+
+                foreach (TagTeam tag in _tags)
                 {
-                    if (_countUnits[(TagTeam)i] > 0)
+                    if (_countUnits[tag] > 0)
                     {
-                        Debug.Log("Победила команда : " + ((TagTeam)i).ToString());
+                        Debug.Log("Победила команда : " + (tag).ToString());
                         break;
-                    }    
+                    }
                 }
             }
         }

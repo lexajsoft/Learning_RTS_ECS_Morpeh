@@ -1,4 +1,5 @@
 ﻿using System;
+using ECS.Components.Interface;
 using ECS.Untils;
 using Scellecs.Morpeh;
 using UnityEngine;

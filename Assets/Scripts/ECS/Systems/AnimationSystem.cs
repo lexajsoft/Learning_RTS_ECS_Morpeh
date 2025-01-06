@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ECS;
 using ECS.Components;
 using Scellecs.Morpeh;
@@ -12,6 +13,7 @@ using Unity.IL2CPP.CompilerServices;
 public sealed class AnimationSystem : UpdateSystem
 {
     private Filter _filter;
+
     public override void OnAwake()
     {
         World = WorldManager.WorldDefault;
@@ -22,7 +24,11 @@ public sealed class AnimationSystem : UpdateSystem
             .Build();
     }
 
-    public override void OnUpdate(float deltaTime) 
+    private string ANIMATION_STATE_ATTACK => "Attacking";
+    private string ANIMATION_STATE_DEATH => "Death";
+    private string ANIMATION_STATE_MOVING => "Moving";
+
+    public override void OnUpdate(float deltaTime)
     {
         foreach (var entity in _filter)
         {
@@ -30,31 +36,31 @@ public sealed class AnimationSystem : UpdateSystem
             ref var healthComponent = ref entity.GetComponent<HealthComponent>();
             ref var movementComponent = ref entity.GetComponent<MovementComponent>();
 
-            if (entity.Has<AttackProcessingComponent>())
+            // разовая инициализация
+            // не актуальна после апгрейда
+            // if (animationComponent.Inited == false)
+            // {
+            //     animationComponent.States = new Dictionary<string, int>();
+            //     foreach (var parameter in animationComponent.Animator.parameters)
+            //     {
+            //         animationComponent.States.Add(parameter.name, parameter.nameHash);
+            //     }
+            // }
+
+            var isAttacking = entity.Has<AttackProcessingComponent>();
+            if (animationComponent.States.TryGetValue(ANIMATION_STATE_ATTACK, out var animAttackID))
             {
-                animationComponent.Animator.SetBool("Attacking",true);
-            }
-            else
-            {
-                animationComponent.Animator.SetBool("Attacking",false);
+                animationComponent.Animator.SetBool(animAttackID, isAttacking);
             }
 
-            if (healthComponent.IsLive == false)
+            if (animationComponent.States.TryGetValue(ANIMATION_STATE_DEATH, out var animDeathID))
             {
-                animationComponent.Animator.SetBool("Death", true);
-            }
-            else
-            {
-                animationComponent.Animator.SetBool("Death", false);
+                animationComponent.Animator.SetBool(animDeathID, !healthComponent.IsLive);
             }
 
-            if (movementComponent.Direct != Vector3.zero)
+            if (animationComponent.States.TryGetValue(ANIMATION_STATE_MOVING, out var animMoveID))
             {
-                animationComponent.Animator.SetBool("Moving", true);
-            }
-            else
-            {
-                animationComponent.Animator.SetBool("Moving", false);
+                animationComponent.Animator.SetBool(animMoveID, movementComponent.Direct != Vector3.zero);
             }
         }
     }

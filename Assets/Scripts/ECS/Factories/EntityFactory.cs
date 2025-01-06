@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using ECS.Components;
+using ECS.Components.Interface;
 using ECS.ScriptableObjects;
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Providers;
 using UnityEngine;
+using Object = System.Object;
+using Random = UnityEngine.Random;
 
 namespace ECS.Factories
 {
@@ -39,11 +44,25 @@ namespace ECS.Factories
             var entity = WorldManager.WorldDefault.CreateEntity();
 #endif
 
+            // улучшение, теперь инициализация перенесена в сами компоненты
             for (int i = 0; i < entityComponentsData.Components.Count; i++)
             {
-                AddComponent(entity, entityComponentsData.Components[i]);
+                var component = entityComponentsData.Components[i].Copy();
+
+                if (component is IComponentGameObjectInitting IComponentGameObjectInitting)
+                {
+                    IComponentGameObjectInitting.Init(gameObject);
+                }
+
+                if (component is IComponentEmptyInitting IComponentEmptyInitting)
+                {
+                    IComponentEmptyInitting.Init();
+                }
+
+                AddComponent(entity, component);
             }
 
+            // если на GameObject есть готовый пресет то он дополнительно сверху устанавливается
             var presetEntityMono = gameObject.GetComponentInChildren<PresetEntityMono>();
             if (presetEntityMono != null)
             {
@@ -55,7 +74,8 @@ namespace ECS.Factories
             }
 
             SetTag(entity, gameObject, tagTeam);
-            SetValues(entity, gameObject);
+            AddEntityMono(entity, gameObject);
+            CreateHealthBar(entity, gameObject);
 
             return entity;
         }
@@ -74,93 +94,47 @@ namespace ECS.Factories
             var entity = WorldManager.WorldDefault.CreateEntity();
 #endif
 
-
             for (int i = 0; i < entityComponentsData.Components.Count; i++)
             {
-                AddComponent(entity, entityComponentsData.Components[i]);
-            }
+                var component = entityComponentsData.Components[i].Copy();
 
-            if (entity.Has<TagTeamComponent>())
-            {
-                ref var tagTeamComponent = ref entity.GetComponent<TagTeamComponent>();
-
-                if (gameObject.TryGetComponent<ReColoringByTagTeam>(out var reColoringByTagTeam))
+                if (component is IComponentGameObjectInitting IComponentGameObjectInitting)
                 {
-                    reColoringByTagTeam.ReColor(tagTeamComponent.TagTeam);
+                    IComponentGameObjectInitting.Init(gameObject);
                 }
+
+                if (component is IComponentEmptyInitting IComponentEmptyInitting)
+                {
+                    IComponentEmptyInitting.Init();
+                }
+
+                AddComponent(entity, component);
             }
 
-            SetValues(entity, gameObject);
+            AddEntityMono(entity, gameObject);
+            CreateHealthBar(entity, gameObject);
         }
 
         /// <summary>
-        /// Прокидывание в компоненты данные
+        /// Добавляет на объект EntityMono для взаимодействия с Entity
+        /// Пример. в NPC попадает стрела которая должена нанести урон, и для этого у NPC запрашивается EntityMono покоторому могут обратиться к Entity 
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="gameObject"></param>
-        private static void SetValues(Entity entity, GameObject gameObject)
+        private static void AddEntityMono(Entity entity, GameObject gameObject)
         {
-            if (entity.Has<TransformComponent>())
-            {
-                ref var pos = ref entity.GetComponent<TransformComponent>();
-                pos.Transform = gameObject.transform;
-            }
-
-            if (entity.Has<PositionComponent>())
-            {
-                ref var pos = ref entity.GetComponent<PositionComponent>();
-                pos.Pos = gameObject.transform.position;
-            }
-
-            if (entity.Has<AnimationComponent>())
-            {
-                ref var animationComponent = ref entity.GetComponent<AnimationComponent>();
-
-                animationComponent.Animator = gameObject.GetComponent<Animator>();
-            }
-
-            if (entity.Has<MovementComponent>())
-            {
-                ref var movementComponent = ref entity.GetComponent<MovementComponent>();
-                if (gameObject.TryGetComponent<Rigidbody>(out var rigidbody))
-                {
-                    movementComponent.Transform = gameObject.transform;
-                    movementComponent.Rigidbody = rigidbody;
-                }
-            }
-
-            if (entity.Has<TargetComponent>())
-            {
-                ref var targetComponent = ref entity.GetComponent<TargetComponent>();
-                targetComponent.Target = null;
-            }
-
-            if (entity.Has<HealthBarComponent>())
-            {
-                HealthBarFactory.Create(entity, gameObject);
-            }
-
-            if (entity.Has<DeactivateColliderOnDeadComponent>())
-            {
-                ref var deactivateColliderOnDeadComponent =
-                    ref entity.GetComponent<DeactivateColliderOnDeadComponent>();
-                deactivateColliderOnDeadComponent.Collider = gameObject.GetComponent<Collider>();
-                if (gameObject.TryGetComponent<Rigidbody>(out var rigidbody))
-                {
-                    deactivateColliderOnDeadComponent.Rigidbody = rigidbody;
-                }
-            }
-
-            if (entity.Has<SpawnComponent>())
-            {
-                ref var spawnComponent = ref entity.GetComponent<SpawnComponent>();
-                spawnComponent.QueueEntity = new List<EntityDescriptionScriptableObject>();
-            }
-
             EntityMono entityMono = gameObject.GetComponent<EntityMono>();
             if (entityMono == null)
                 entityMono = gameObject.AddComponent<EntityMono>();
             entityMono.SetEntity(entity);
+        }
+
+        private static void CreateHealthBar(Entity entity, GameObject gameObject)
+        {
+            if (entity.Has<HealthBarComponent>())
+            {
+                HealthBarFactory.Create(entity, gameObject);
+            }
         }
 
         private static void SetTag(Entity entity, GameObject gameObject, TagTeam tagTeam)
@@ -177,6 +151,21 @@ namespace ECS.Factories
             }
         }
 
+        private static IComponent Copy(this IComponent obj)
+        {
+            IComponent comp = null;
+            if (obj is ICloneable ICloneable)
+            {
+                comp = (IComponent) ICloneable.Clone();
+            }
+            else
+            {
+                comp = obj;
+            }
+
+            return comp;
+        }
+
         private static void AddComponent(Entity entity, IComponent component)
         {
             // обновленный способ
@@ -184,63 +173,12 @@ namespace ECS.Factories
             MethodInfo methodInfo = entityType.GetMethod("SetComponent");
 
             // Указываем тип параметра
+            //Type componentType = component.GetType();
             Type componentType = component.GetType();
             MethodInfo genericMethod = methodInfo.MakeGenericMethod(componentType);
 
             // Вызываем метод
             genericMethod.Invoke(null, new object[] {entity, component});
-
-            ///////////////////////////////////////////////////////////////////////////
-
-            // Ранее я юзал подключение компонентов именно вот так
-
-            // class 
-            // if(entity.CheckAndSet<HeroClassComponent>(component))return;
-            //
-            // // health
-            // if(entity.CheckAndSet<HealthComponent>(component))return;
-            //
-            // // movement
-            // if(entity.CheckAndSet<PositionComponent>(component))return;
-            // if(entity.CheckAndSet<MovementComponent>(component))return;
-            // if(entity.CheckAndSet<RotationComponent>(component))return;
-            //
-            // // animations
-            // if(entity.CheckAndSet<AnimationComponent>(component))return;
-            //
-            // // actions
-            // if(entity.CheckAndSet<MelleAttackComponent>(component))return;
-            // if(entity.CheckAndSet<RangeAttackComponent>(component))return;
-            // if(entity.CheckAndSet<QuiverComponent>(component)) return;
-            //
-            // // targets
-            // if(entity.CheckAndSet<MainTargetComponent>(component))return;
-            // if(entity.CheckAndSet<NearEntitiesComponent>(component))return;
-            // if(entity.CheckAndSet<TargetComponent>(component)) return;
-            //
-            // // TagTeam
-            // if(entity.CheckAndSet<TagTeamComponent>(component)) return;
-            //
-            // // Transform
-            // if(entity.CheckAndSet<TransformComponent>(component)) return;
-            //
-            // // Spawn logic
-            // if(entity.CheckAndSet<SpawnPointsComponent>(component)) return;
-            // if(entity.CheckAndSet<SpawnComponent>(component)) return;
-            // if(entity.CheckAndSet<EntitySpawnProccesingComponent>(component)) return;
-            // if(entity.CheckAndSet<EntitySpawnReadyComponent>(component)) return;
-        }
-
-        // old
-        private static bool CheckAndSet<T>(this Entity entity, IComponent component) where T : struct, IComponent
-        {
-            if (component is T result)
-            {
-                entity.SetComponent(result);
-                return true;
-            }
-
-            return false;
         }
     }
 }

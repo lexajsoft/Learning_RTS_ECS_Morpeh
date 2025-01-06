@@ -6,11 +6,12 @@ namespace ECS.Untils
     {
         [SerializeField] private MeshRenderer _meshRenderer;
         private Material _material;
-
+        private int _healthValueProgressID = -1;
         public void Init()
         {
             _material = Instantiate(_meshRenderer.material);
             _meshRenderer.material = _material;
+            _healthValueProgressID = Shader.PropertyToID("_Progress");
         }
 
         public void DestroySelf()
@@ -27,7 +28,7 @@ namespace ECS.Untils
             
             _value = value;
             value = Mathf.Clamp01(value);
-            _material.SetFloat("_Progress", value);
+            _material.SetFloat(_healthValueProgressID, value);
         }
     }
 }

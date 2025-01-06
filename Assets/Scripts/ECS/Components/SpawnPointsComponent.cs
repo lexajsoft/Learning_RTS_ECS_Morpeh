@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 namespace ECS.Components
 {
     [Serializable]
-    public struct SpawnPointsComponent : IComponent
+    public struct SpawnPointsComponent : IComponent, ICloneable
     {
         public List<Transform> Points;
         [DefaultValue(0)]
@@ -34,6 +34,11 @@ namespace ECS.Components
             }
 
             return Vector3.zero;
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

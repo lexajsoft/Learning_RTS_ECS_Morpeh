@@ -12,8 +12,12 @@ namespace ECS.Components
     }
 
     [Serializable]
-    public struct HeroClassComponent : IComponent
+    public struct HeroClassComponent : IComponent, ICloneable
     {
         public HeroClass HeroClass;
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

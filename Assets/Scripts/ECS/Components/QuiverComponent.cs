@@ -7,8 +7,12 @@ namespace ECS.Components
 {
     // колчан
     [Serializable]
-    public struct QuiverComponent : IComponent
+    public struct QuiverComponent : IComponent, ICloneable
     {
         public ProjectileData ProjectileData;
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

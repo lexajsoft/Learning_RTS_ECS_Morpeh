@@ -19,8 +19,10 @@ namespace ECS.Factories
 
     public static class ProjectileFactory 
     {
+        
         public static void CreateProjectile(ProjectileData projectileData, TagTeam TagTeam)
         {
+            
             var projectileGameObject = GameObject.Instantiate(projectileData.Prefab, projectileData.StartPosition, Quaternion.identity);
             
 #if UNITY_EDITOR
